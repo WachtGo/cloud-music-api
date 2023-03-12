@@ -16,7 +16,6 @@
   "pkg": {
     "scripts": "module/*.js",
     "assets": [
-      "/node_modules/vm2/lib/contextify.js",
       "/public"
     ]
   },
@@ -51,14 +50,20 @@
     "public"
   ],
   "dependencies": {
-    "axios": "^0.24.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.9",
+    "jsonwebtoken": "^9.0.0",
     "md5": "^2.3.0",
+    "mongoose": "^6.10.0",
+    "multer": "^1.4.5-lts.1",
     "music-metadata": "^7.5.3",
+    "nodemailer": "^6.9.1",
     "pac-proxy-agent": "^5.0.0",
     "qrcode": "^1.4.4",
     "safe-decode-uri-component": "^1.2.1",
+    "svg-captcha": "^1.4.0",
     "tunnel": "^0.0.6",
     "yargs": "^17.1.1"
   },
