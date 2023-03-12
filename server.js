@@ -1,26 +1,27 @@
 const path = require('path')
 const express = require('express')
-const cors = require('cors')
+// const cors = require('cors')
 
 async function consturctServer(moduleDefs) {
   const app = express()
-  app.use(cors())
+  // app.use(cors())
 
   /**
    * CORS & Preflight request
    */
-  // app.use((req, res, next) => {
-  //   if (req.path !== '/' && !req.path.includes('.')) {
-  //     res.set({
-  //       'Access-Control-Allow-Credentials': true,
-  //       'Access-Control-Allow-Origin': req.headers.origin || '*',
-  //       'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type',
-  //       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
-  //       'Content-Type': 'application/json; charset=utf-8',
-  //     })
-  //   }
-  //   req.method === 'OPTIONS' ? res.status(204).end() : next()
-  // })
+  app.use((req, res, next) => {
+    if (req.path !== '/' && !req.path.includes('.')) {
+      res.set({
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Origin': req.headers.origin || '*',
+        'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type',
+        'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
+        'Content-Type': 'application/json; charset=utf-8',
+      })
+    }
+    next()
+    // req.method === 'OPTIONS' ? res.status(204).end() : next()
+  })
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
