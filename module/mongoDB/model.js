@@ -4,16 +4,16 @@
 const mongoose = require('mongoose')
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/blog2', {
-    useNewUrlParser: true, // 防止莫名警告信息的 两条配置
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log('数据库连接成功')
-  })
-  .catch(() => {
-    console.log('数据库连接失败')
-  })
+    .connect('mongodb://127.0.0.1:27017/blog2', {
+        useNewUrlParser: true, // 防止莫名警告信息的 两条配置
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        console.log('数据库连接成功')
+    })
+    .catch(() => {
+        console.log('数据库连接失败')
+    })
 
 const bcrypt = require('bcrypt') //密码加密的包
 
@@ -21,124 +21,124 @@ const Schema = mongoose.Schema
 
 // 生成一个表规则对象userSchema
 const userSchema = new Schema(
-  {
-    //制定表规则
-    username: {
-      type: String, //将name的值的数据类型限制为String，以此类推
-      require: true, //表示name为必填项 。若不满足条件,希望有所提示，可写成 例： require: [true, "name字段为必填项!"]
-      minlength: 2,
-      maxlength: 16, //表示限制name的长度为 2 ~ 16 个字符
+    {
+        //制定表规则
+        username: {
+            type: String, //将name的值的数据类型限制为String，以此类推
+            require: true, //表示name为必填项 。若不满足条件,希望有所提示，可写成 例： require: [true, "name字段为必填项!"]
+            minlength: 2,
+            maxlength: 16, //表示限制name的长度为 2 ~ 16 个字符
+        },
+        password: {
+            type: String,
+            require: true,
+            minlength: 6,
+            set(value) {
+                //value 12345678
+                // return 加密的值
+                //hashSysc 散列的同步函数   hashSync（需要散列的值，散列的程度）
+                return bcrypt.hashSync(value, 10)
+            },
+        },
+        nickname: {
+            type: String,
+            default: '果然是个随缘怪',
+        },
+        signature: {
+            type: String,
+            default: '没有签名就是个性',
+        },
+        tags: {
+            type: Array,
+            default: ['帅气', '美丽', '温柔', '大方', '勇敢', '智慧'],
+        },
+        avatar: {
+            type: String,
+            default: '/userImg/default6666666.png',
+        },
     },
-    password: {
-      type: String,
-      require: true,
-      minlength: 6,
-      set(value) {
-        //value 12345678
-        // return 加密的值
-        //hashSysc 散列的同步函数   hashSync（需要散列的值，散列的程度）
-        return bcrypt.hashSync(value, 10)
-      },
-    },
-    nickname: {
-      type: String,
-      default: '果然是个随缘怪',
-    },
-    signature: {
-      type: String,
-      default: '没有签名就是个性',
-    },
-    tags: {
-      type: Array,
-      default: ['帅气', '美丽', '温柔', '大方', '勇敢', '智慧'],
-    },
-    avatar: {
-      type: String,
-      default: '/userImg/default6666666.png',
-    },
-  },
-  { versionKey: false /*取消表中自动生成版本号'__v'*/ },
+    { versionKey: false /*取消表中自动生成版本号'__v'*/ },
 )
 
 //留言
 const messageSchema = new Schema(
-  {
-    content: {
-      type: String,
-      required: true,
+    {
+        content: {
+            type: String,
+            required: true,
+        },
+        writer: {
+            type: String,
+            required: true,
+        },
+        createTime: {
+            type: Number,
+            required: true,
+        },
+        user: {
+            //关联users表	绑定_id ->	author: res._id
+            type: Schema.Types.ObjectId,
+            ref: 'users',
+        },
     },
-    writer: {
-      type: String,
-      required: true,
+    {
+        versionKey: false,
     },
-    createTime: {
-      type: Number,
-      required: true,
-    },
-    user: {
-      //关联users表	绑定_id ->	author: res._id
-      type: Schema.Types.ObjectId,
-      ref: 'users',
-    },
-  },
-  {
-    versionKey: false,
-  },
 )
 
 //友链
 const linkSchema = new Schema(
-  {
-    linkname: {
-      type: String,
-      required: true,
-    },
-
-    linkurl: {
-      type: String,
-      required: true,
-      validate: {
-        //自定义验证
-        validator(value) {
-          return /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(value)
+    {
+        linkname: {
+            type: String,
+            required: true,
         },
-        message: '网址输入有误！', //验证不通过时的提示
-      },
+
+        linkurl: {
+            type: String,
+            required: true,
+            validate: {
+                //自定义验证
+                validator(value) {
+                    return /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(value)
+                },
+                message: '网址输入有误！', //验证不通过时的提示
+            },
+        },
+        user: {
+            //关联users表	绑定_id ->	author: res._id
+            type: Schema.Types.ObjectId,
+            ref: 'users',
+        },
     },
-    user: {
-      //关联users表	绑定_id ->	author: res._id
-      type: Schema.Types.ObjectId,
-      ref: 'users',
+    {
+        versionKey: false,
     },
-  },
-  {
-    versionKey: false,
-  },
 )
 
 const noteSchema = new Schema(
-  {
-    articleTitle: String, // 标题
-    articleDesc: String, // 描述
-    articleMdUrl: String, // 文章连接
-    articleImgUrl: {
-      type: 'String',
-      default: '/vue_img/hot5.png',
-    }, //  封面连接
-    articleDate: {
-      //  时间
-      type: Date,
-      default: Date.now(),
+    {
+        articleTitle: String, // 标题
+        articleDesc: String, // 描述
+        articleMdUrl: String, // 文章连接
+        articleImgUrl: {
+            type: 'String',
+            default: '/vue_img/hot5.png',
+        }, //  封面连接
+        articleDate: {
+            //  时间
+            type: Date,
+            default: Date.now(),
+        },
+        articleChildren: [], // 设置评论
+        articleBol: {
+            type: Boolean,
+            default: false,
+        },
     },
-    articleChildren: [], // 设置评论
-    articleBol: {
-      type: Boolean,
-      default: false,
+    {
+        versionKey: false,
     },
-  },
-  {
-    versionKey: false,
-  },
 )
 
 // 创建/选择表               表名  之前设置的表规则userSchema
