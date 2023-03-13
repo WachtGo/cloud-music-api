@@ -1,5 +1,7 @@
 const path = require('path')
 const express = require('express')
+const history = require('connect-history-api-fallback')
+
 // const cors = require('cors')
 
 async function consturctServer(moduleDefs) {
@@ -9,12 +11,16 @@ async function consturctServer(moduleDefs) {
   /**
    * CORS & Preflight request
    */
+  const { CORS_ALLOW_ORIGIN } = process.env
+  app.set('trust proxy', true)
+
   app.use((req, res, next) => {
     // if (req.path !== '/' && !req.path.includes('.')) {
     // console.log('req.headers.origin--', req.headers.origin)
     res.set({
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin':
+        CORS_ALLOW_ORIGIN || req.headers.origin || '*',
       'Access-Control-Allow-Headers':
         'X-Requested-With,Content-Type,Authorization',
       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
@@ -28,6 +34,7 @@ async function consturctServer(moduleDefs) {
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
 
+  app.use(history())
   app.use(express.static(path.join(__dirname, 'public')))
 
   app.use('/', require('./router/a_index'))
