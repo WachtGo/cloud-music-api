@@ -14,7 +14,7 @@ async function consturctServer(moduleDefs) {
     // console.log('req.headers.origin--', req.headers.origin)
     res.set({
       'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Origin': req.headers.origin || '*',
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers':
         'X-Requested-With,Content-Type,Authorization',
       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
