@@ -158,14 +158,14 @@ async function consturctServer(moduleDefs) {
    */
   app.use((req, _, next) => {
     req.cookies = {}
-      //;(req.headers.cookie || '').split(/\s*;\s*/).forEach((pair) => { //  Polynomial regular expression //
-      ; (req.headers.cookie || '').split(/;\s+|(?<!\s)\s+$/g).forEach((pair) => {
-        let crack = pair.indexOf('=')
-        if (crack < 1 || crack == pair.length - 1) return
-        req.cookies[decode(pair.slice(0, crack)).trim()] = decode(
-          pair.slice(crack + 1),
-        ).trim()
-      })
+    //;(req.headers.cookie || '').split(/\s*;\s*/).forEach((pair) => { //  Polynomial regular expression //
+    ;(req.headers.cookie || '').split(/;\s+|(?<!\s)\s+$/g).forEach((pair) => {
+      let crack = pair.indexOf('=')
+      if (crack < 1 || crack == pair.length - 1) return
+      req.cookies[decode(pair.slice(0, crack)).trim()] = decode(
+        pair.slice(crack + 1),
+      ).trim()
+    })
     next()
   })
 
@@ -181,7 +181,7 @@ async function consturctServer(moduleDefs) {
    * Serving static files
    */
   app.use(express.static(path.join(__dirname, 'public')))
-  app.use('/', require('./router/a_index'))
+
   /**
    * Cache
    */
